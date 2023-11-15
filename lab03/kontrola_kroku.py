@@ -28,7 +28,7 @@ def kontrola_kroku(x0, v0, dt0, tmax, TOL, S, p, fun_num):
         x_2n1, v_2n1 = fun_num(xn, vn, t, alpha, dt, TOL)
         x_2n2, v_2n2 = fun_num(x_2n1, v_2n1, t, alpha, dt, TOL)
 
-        x_1n2, v_1n2 = fun_num(xn, vn, 2 * dt, alpha, dt, TOL)
+        x_1n2, v_1n2 = fun_num(xn, vn, t, alpha, 2*dt, TOL)
 
         Ex = stala_bledu(x_1n2, x_2n2, p)
         Ev = stala_bledu(v_1n2, v_2n2, p)
