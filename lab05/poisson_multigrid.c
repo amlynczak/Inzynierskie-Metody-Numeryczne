@@ -7,7 +7,7 @@
 #define Ny 128
 #define xMax (delta)*(Nx)
 #define yMax (delta)*(Ny)
-#define TOL 10e-8
+#define TOL 0.00000001 //10^-8
 
 //warunki brzegowe Dirichleta
 #define VB1(y) (sin(M_PI * (y)/(yMax))) //wzor (17)
@@ -29,10 +29,10 @@ void create_directory(const char *path) {
 /*endif*/
 
 double S_calka(double V[Nx + 1][Ny + 1], int k, double delta_val) {
-    double s;
+    double s = 0.0;
     for (int i = 0; i <= Nx - k; i += k) {
         for (int j = 0; j <= Ny - k; j += k) {
-            double sum = (k * k * delta_val * delta_val / 2) * (
+            double sum = (pow(k * delta_val,2) / 2.0) * (
                 pow((V[i+k][j] - V[i][j] + V[i+k][j+k] - V[i][j+k])/(2*k*delta_val), 2) +
                 pow((V[i][j+k] - V[i][j] + V[i+k][j+k] - V[i+k][j])/(2*k*delta_val), 2)
             );
@@ -92,9 +92,7 @@ void relaksacja_wielosiatkowa(int k1){
 
             fprintf(file_S, "%d %.8f\n", iter_total, S_it);
 
-            double war = fabs((S_it - S_it_1)/S_it_1); //wyliczenie wartosci do porownania z TOL
-
-            if(war < TOL){
+            if(fabs((S_it - S_it_1)/S_it_1) < TOL){
                 break;
             }//sprawdzenie warunku stopu
         }
@@ -137,6 +135,9 @@ void relaksacja_wielosiatkowa(int k1){
         }
 
         k = k/2; //przejscie do nastepnej wartosci k
+        if(k==1){
+            printf("Liczba iteracji: %d\n", iter_total);
+        }
     }
     fclose(file_S);
     chdir("..");

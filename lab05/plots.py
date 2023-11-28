@@ -83,6 +83,7 @@ plt.plot(range(k_it[3]+1, k_it[4]), k_1, label='k = 1', color='green')
 plt.legend(loc='upper right')
 plt.xlabel('iteracja')
 plt.ylabel('S')
+plt.grid()
 
 plt.tight_layout()
 plt.show()
