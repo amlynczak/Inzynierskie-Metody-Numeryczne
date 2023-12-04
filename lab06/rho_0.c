@@ -20,23 +20,23 @@ void create_directory(const char *path) {
 
 int set_l(int i, int j, int nx){
     return i + j*(nx+1);
-}
+}//wzor (11)
 
 int get_j(int nx, int l){
     return floor(l/(nx+1));
-}
+}//wzor (12)
 
 int get_i(int nx, int l){
     return l - get_j(nx, l)*(nx+1);
-}
+}//wzor (13)
 
 double rho_1(int i, int j, int nx, int ny){
     return 0.0;
-}
+}//w przykladach realizowanych w tym pliku rho_1 oraz rho_2 sa rowne 0
 
 double rho_2(int i, int j, int nx, int ny){
     return 0.0;
-}
+}//w przykladach realizowanych w tym pliku rho_1 oraz rho_2 sa rowne 0
 
 double eps_l(int eps1, int eps2, int l, int nx){
     if(get_i(nx, l) >= (nx/2)){
@@ -44,7 +44,7 @@ double eps_l(int eps1, int eps2, int l, int nx){
     }else{
         return (double)eps2;
     }
-}
+}//wzor (21)
 
 int macierz_A(int N, int nx, int ny, int eps1, int eps2, int V1, int V2, int V3, int V4, double *a, int *ja, int *ia, double *b){
     int brzeg; //jesli 1 to jestesmy na brzegu, 0 to srodek
@@ -57,7 +57,7 @@ int macierz_A(int N, int nx, int ny, int eps1, int eps2, int V1, int V2, int V3,
         FILE* b_vec = fopen("wektor_b.txt", "w");
         fprintf(b_vec, "#l \t i_l \t j_l \t b[l]\n");
         fclose(b_vec);
-    }
+    }//zapis do plikow wektora b przy nx=ny=4
 
     for(int l=0; l<N; l++){
         brzeg = 0;
@@ -91,7 +91,7 @@ int macierz_A(int N, int nx, int ny, int eps1, int eps2, int V1, int V2, int V3,
             FILE* b_vect = fopen("wektor_b.txt", "a");
             fprintf(b_vect, "%d \t %d \t %d \t %lf \n", l, get_i(nx, l), get_j(nx, l), b[l]);
             fclose(b_vect);
-        }
+        }//zapis do pliku
 
         /*wypelnienie elementow macierzy A*/
         ia[l] = -1; //wskaznik pierwszego elementu w wierszu
@@ -101,7 +101,7 @@ int macierz_A(int N, int nx, int ny, int eps1, int eps2, int V1, int V2, int V3,
             if(ia[l]<0){
                 ia[l] = k;
             }
-            a[k] = eps_l(eps1, eps1, l, nx)/(delta*delta); //a[l][l-nx-1]
+            a[k] = eps_l(eps1, eps1, l, nx)/(delta*delta); //a[l][l-nx-1], wzor (16)
             ja[k] = l - nx - 1;
         }
         if(l-1 >= 0 && brzeg == 0){ //poddiagonala
@@ -109,7 +109,7 @@ int macierz_A(int N, int nx, int ny, int eps1, int eps2, int V1, int V2, int V3,
             if(ia[l]<0){
                 ia[l] = k;
             }
-            a[k] = eps_l(eps1, eps2, l, nx)/(delta*delta); //a[l][l-1]
+            a[k] = eps_l(eps1, eps2, l, nx)/(delta*delta); //a[l][l-1], wzor (17)
             ja[k] = l - 1;
         }
         //diagonala
@@ -118,7 +118,7 @@ int macierz_A(int N, int nx, int ny, int eps1, int eps2, int V1, int V2, int V3,
             ia[l] = k;
         }
         if(brzeg == 0){
-            a[k] = -(2 * eps_l(eps1, eps2, l, nx) + eps_l(eps1, eps2, l+1, nx) + eps_l(eps1, eps2, l+nx+1, nx))/(delta*delta);//a[l][l]
+            a[k] = -(2 * eps_l(eps1, eps2, l, nx) + eps_l(eps1, eps2, l+1, nx) + eps_l(eps1, eps2, l+nx+1, nx))/(delta*delta);//a[l][l], wzor (18)
         }else{
             a[k] = 1;
         }
@@ -126,12 +126,12 @@ int macierz_A(int N, int nx, int ny, int eps1, int eps2, int V1, int V2, int V3,
 
         if(l<N && brzeg == 0){//naddiagonala
             k++;
-            a[k] = eps_l(eps1, eps2, l+1, nx)/(delta*delta); //a[l][l+1]
+            a[k] = eps_l(eps1, eps2, l+1, nx)/(delta*delta); //a[l][l+1], wzor (19)
             ja[k] = l+1;
         }
         if(1<(N-nx-1) && brzeg == 0){ //skrajna prawa diagonala
             k++;
-            a[k] = eps_l(eps1, eps2, l+nx+1, nx)/(delta*delta);//a[l][l+nx+1]
+            a[k] = eps_l(eps1, eps2, l+nx+1, nx)/(delta*delta);//a[l][l+nx+1], wzor (20)
             ja[k] = l + nx +1;
         }
     }
@@ -147,7 +147,7 @@ int macierz_A(int N, int nx, int ny, int eps1, int eps2, int V1, int V2, int V3,
         }
         fclose(A);
         chdir("..");
-    }
+    }//zapis do pliku macierzy A
 
     return nz_num;
 }
@@ -160,11 +160,13 @@ void metoda_algebraiczna(int N, int nx, int ny, int eps1, int eps2, int V1, int 
 
     int nz_num = macierz_A(N, nx, ny, eps1, eps2, V1, V2, V3, V4, a, ja, ia, b); //wypelnienie macierzy
 
+    /*parametry zgodnie z trescia zadania*/
     int itr_max = 500;
     int mr = 500;
     double tol_abs = pow(10, -8);
     double tol_rel = pow(10, -8);
 
+    /*uzycie danej nam biblioteki*/
     pmgmres_ilu_cr(N, nz_num, ia, ja, a, V, b, itr_max, mr, tol_abs, tol_rel);
 
     for(int l=0; l<N; l++){

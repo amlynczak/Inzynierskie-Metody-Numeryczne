@@ -20,15 +20,15 @@ void create_directory(const char *path) {
 
 int set_l(int i, int j, int nx){
     return i + j*(nx+1);
-}
+}//wzor (11)
 
 int get_j(int nx, int l){
     return floor(l/(nx+1));
-}
+}//wzor (12)
 
 int get_i(int nx, int l){
     return l - get_j(nx, l)*(nx+1);
-}
+}//wzor (13)
 
 double rho_1(int i, int j, int nx, int ny){
     double x_max = delta * nx;
@@ -41,7 +41,7 @@ double rho_1(int i, int j, int nx, int ny){
     double var2 = pow((y - 0.5*y_max), 2)/pow(sigma, 2);
 
     return exp(-var1-var2);
-}
+}//wzor (25)
 
 double rho_2(int i, int j, int nx, int ny){
     double x_max = delta * nx;
@@ -54,7 +54,7 @@ double rho_2(int i, int j, int nx, int ny){
     double var2 = pow((y - 0.5*y_max), 2)/pow(sigma, 2);
 
     return (-1)*exp(-var1-var2);
-}
+}//wzor (26)
 
 double eps_l(int eps1, int eps2, int l, int nx){
     double i = (double)get_i(nx, l);
@@ -65,7 +65,7 @@ double eps_l(int eps1, int eps2, int l, int nx){
     }else{
         return (double)eps2;
     }
-}
+}//wzor (21)
 
 int macierz_A(int N, int nx, int ny, int eps1, int eps2, int V1, int V2, int V3, int V4, double *a, int *ja, int *ia, double *b){
     int brzeg; //jesli 1 to jestesmy na brzegu, 0 to srodek
@@ -164,6 +164,7 @@ void metoda_algebraiczna(int N, int nx, int ny, int eps1, int eps2, int V1, int 
     
     int nz_num = macierz_A(N, nx, ny, eps1, eps2, V1, V2, V3, V4, a, ja, ia, b); //wypelnienie macierzy
 
+    /*ustalenie wartosci parametrow zgodnie z trescia*/
     int itr_max = 500;
     int mr = 500;
     double tol_abs = pow(10, -8);
@@ -175,7 +176,7 @@ void metoda_algebraiczna(int N, int nx, int ny, int eps1, int eps2, int V1, int 
         int i = get_i(nx, l);
         int j = get_j(nx, l);
         fprintf(map, "%lf %lf %lf \n", delta*i, delta*j, V[l]);
-    }
+    }//zapis mapy do pliku
 
     fclose(map);
     chdir("..");
