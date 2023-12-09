@@ -1,0 +1,1 @@
+do poprawnego dzialania kodu potrzebna jest biblioteka mgmres.h (autorstwa Lili Ju, University of South Carolina)
