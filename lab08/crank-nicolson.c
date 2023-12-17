@@ -13,7 +13,8 @@
 #define xA 0.45
 #define yA 0.45
 
-#define IT_MAX 10000 //ustalone tak, aby bylo widac trzy maksima na wykresie x_sr
+#define IT_MAX 10000 
+//ustalone tak, aby bylo widac trzy maksima na wykresie x_sr
 
 void wczytaj_strumien(double psi[nx+1][ny+1]){ //wczytanie danych strumienia z pliku psi.dat
     FILE *f;
